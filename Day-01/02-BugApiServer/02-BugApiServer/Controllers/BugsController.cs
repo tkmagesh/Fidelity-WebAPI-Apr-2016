@@ -22,19 +22,38 @@ namespace _02_BugApiServer.Controllers
         }
 
         // GET: api/Bugs/5
-        public string Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            var b = _bugsList.FirstOrDefault(bug => bug.Id == id);
+            if (b == null)
+            {
+                return NotFound();
+            } else
+            {
+                return Ok<Bug>(b);
+            }
         }
 
         // POST: api/Bugs
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post(Bug bug)
         {
+            bug.Id = _bugsList.Max(b => b.Id) + 1;
+            _bugsList.Add(bug);
+            return Created<Bug>("/api/bugs/" + bug.Id, bug);
         }
 
         // PUT: api/Bugs/5
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(int id,Bug bug)
         {
+            var b = _bugsList.FirstOrDefault(bg => bg.Id == id);
+            if (b == null)
+            {
+                return NotFound();
+            }
+            b.Name = bug.Name;
+            b.IsClosed = bug.IsClosed;
+            b.createdAt = bug.createdAt;
+            return Ok(b);
         }
 
         // DELETE: api/Bugs/5
