@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using _02_BugApiServer.Foramtters;
 
 namespace _02_BugApiServer
 {
@@ -38,7 +39,9 @@ namespace _02_BugApiServer
                     day = @"\d{0,2}"
                 }
             );
-            
+
+            config.Formatters.Add(new ImageFormatter());
+
         }
     }
 }
