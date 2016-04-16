@@ -11,8 +11,12 @@ namespace _02_BugApiServer.Controllers
     public class BugsController : ApiController
     {
         private static IList<Bug> _bugsList = new List<Bug> {
-            new Bug { Id = 1, Name = "User authentication failure", IsClosed = false, createdAt = new DateTime(2016, 4, 13) },
-            new Bug { Id = 2, Name = "Server communication erratic", IsClosed = false, createdAt = new DateTime(2016, 4, 15) }
+            new Bug { Id = 1, Name = "Bug - 1", IsClosed = false, createdAt = new DateTime(2015, 3, 13) },
+            new Bug { Id = 2, Name = "Bug - 2", IsClosed = false, createdAt = new DateTime(2015, 3, 15) },
+            new Bug { Id = 3, Name = "Bug - 3", IsClosed = false, createdAt = new DateTime(2016, 4, 11) },
+            new Bug { Id = 4, Name = "Bug - 4", IsClosed = false, createdAt = new DateTime(2016, 4, 12) },
+            new Bug { Id = 5, Name = "Bug - 5", IsClosed = false, createdAt = new DateTime(2016, 4, 13) },
+            new Bug { Id = 6, Name = "Bug - 6", IsClosed = false, createdAt = new DateTime(2016, 4, 16) }
         };
 
         // GET: api/Bugs
@@ -33,13 +37,25 @@ namespace _02_BugApiServer.Controllers
                 return Ok<Bug>(b);
             }
         }
+        
+        public  IHttpActionResult Get(int year, int month = 0, int day = 0)
+        {
+            var bugs = _bugsList.Where(b => b.createdAt.Year == year);
+            if (month > 0)
+                bugs = bugs.Where(b => b.createdAt.Month == month);
+            if (day > 0)
+                bugs = bugs.Where(b => b.createdAt.Day == day);
+            if (bugs.Any())
+                return Ok(bugs);
+            return NotFound();
+        }
 
         // POST: api/Bugs
         public IHttpActionResult Post(Bug bug)
         {
             bug.Id = _bugsList.Max(b => b.Id) + 1;
             _bugsList.Add(bug);
-            return Created<Bug>("/api/bugs/" + bug.Id, bug);
+            return Created<Bug>(Url.Link("DefaultApi",new { id = bug.Id}), bug);
         }
 
         // PUT: api/Bugs/5

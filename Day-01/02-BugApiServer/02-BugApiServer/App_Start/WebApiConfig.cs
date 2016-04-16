@@ -22,8 +22,21 @@ namespace _02_BugApiServer
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "myApp/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
+            );
+
+            
+            config.Routes.MapHttpRoute(
+                name: "BugsByDate",
+                routeTemplate: "myApp/Bugs/ByDate/{year}/{month}/{day}",
+                defaults: new { controller="Bugs", year = RouteParameter.Optional, month=RouteParameter.Optional, day = RouteParameter.Optional},
+                constraints: new
+                {
+                    year = @"\d{0,4}",
+                    month = @"\d{0,2}",
+                    day = @"\d{0,2}"
+                }
             );
         }
     }
