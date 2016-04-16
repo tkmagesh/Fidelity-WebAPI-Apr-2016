@@ -1,10 +1,12 @@
 ﻿using _02_BugApiServer.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 
 namespace _02_BugApiServer.Controllers
 {
@@ -53,9 +55,18 @@ namespace _02_BugApiServer.Controllers
         // POST: api/Bugs
         public IHttpActionResult Post(Bug bug)
         {
-            bug.Id = _bugsList.Max(b => b.Id) + 1;
-            _bugsList.Add(bug);
-            return Created<Bug>(Url.Link("DefaultApi",new { id = bug.Id}), bug);
+            if (ModelState.IsValid)
+            {
+                bug.Id = _bugsList.Max(b => b.Id) + 1;
+                _bugsList.Add(bug);
+                return Created<Bug>(Url.Link("DefaultApi", new { id = bug.Id }), bug);
+            }
+            
+            var error = ModelState["bug"].Errors.Aggregate(string.Empty, (result , modelError) 
+                => result += modelError.Exception.Message);
+
+            return BadRequest(error);
+            
         }
 
         // PUT: api/Bugs/5

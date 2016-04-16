@@ -29,7 +29,7 @@ namespace _02_BugApiServer
             
             config.Routes.MapHttpRoute(
                 name: "BugsByDate",
-                routeTemplate: "myApp/Bugs/ByDate/{year}/{month}/{day}",
+                routeTemplate: "myApp/Bugs/{year}/{month}/{day}",
                 defaults: new { controller="Bugs", year = RouteParameter.Optional, month=RouteParameter.Optional, day = RouteParameter.Optional},
                 constraints: new
                 {
@@ -38,6 +38,7 @@ namespace _02_BugApiServer
                     day = @"\d{0,2}"
                 }
             );
+            
         }
     }
 }
